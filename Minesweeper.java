@@ -125,7 +125,7 @@ public class Minesweeper {
     public boolean checkWin() {
         // Implement this method
         for (int i = 0; i < this.rows; i++) {
-            for (int j = 0; i < this.cols; i++) {
+            for (int j = 0; j < this.cols; j++) {
                 if (!this.revealed[i][j] && !this.mines[i][j]) {
                     return false;
                 }
@@ -150,13 +150,33 @@ public class Minesweeper {
                 this.board[row][col] = 'X';
             } else {
                 this.board[row][col] = this.nums[row][col];
+                recursiveReveal(row, col);
             }
         } else {
             System.out.println("Already revealed!");
             return;
         }
-
         this.revealed[row][col] = true;
+    }
+
+    public void recursiveReveal(int row, int col) {
+        if (this.revealed[row][col]) {
+            return;
+        }
+        this.revealed[row][col] = true;
+        this.board[row][col] = this.nums[row][col];
+
+        if (this.nums[row][col] != '0') {
+            return;
+        }
+
+        for (int x = row - 1; x <= row + 1; x++) {
+            for (int y = col - 1; y <= col + 1; y++) {
+                if (x >= 0 && x < this.rows && y >= 0 && y < this.cols) {
+                    recursiveReveal(x, y);
+                }
+            }
+        }
     }
 
     // Method to flag a cell as containing a mine
